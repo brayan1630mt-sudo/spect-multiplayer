@@ -1,0 +1,177 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><link rel="stylesheet" href="spect.css?v=city-multiplayer-mobile-1">
+</head><body><div id="mobile-landscape-notice" role="status" aria-live="polite"><div class="rotate-icon" aria-hidden="true">▱</div><strong>GIRE O CELULAR</strong><span>O Spect foi preparado para jogar na horizontal. Vire o aparelho para continuar.</span></div>
+<audio id="background-music" src="assets/beyond-the-event-horizon.mp3" loop preload="auto"></audio>
+<audio id="battle-music" src="assets/final-showdown.mp3" loop preload="auto"></audio>
+<div id="spect-intro" role="status" aria-label="Carregando Spect Company"><div class="intro-content"><div class="intro-mark" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><path d="M39.4 8.2 7.9 20.4c-2.1.8-2.1 2.1-.4 2.7l8.1 2.8 3.1 9.7c.4 1.2.2 1.7 1.5 1.7 1 0 1.5-.5 2.1-1.1l4-3.9 8.3 6.1c1.5.8 2.6.4 3-1.4l5.3-25.2c.6-2.3-.9-3.4-3.5-2.4Z" fill="url(#plane)"/><path d="m16 25.6 18.3-11.5c.9-.5 1.7-.2 1 .4L20.9 29l-.6 6.2-3.1-9.6Z" fill="#d8f6ff" opacity=".92"/><defs><linearGradient id="plane" x1="9" y1="36" x2="38" y2="9" gradientUnits="userSpaceOnUse"><stop stop-color="#12b8e8"/><stop offset="1" stop-color="#4585ff"/></linearGradient></defs></svg></div><div class="intro-logo">spect <span>company</span></div><div class="intro-subtitle">IMAGE BATTLE SYSTEM</div><div class="intro-loading"><span>Carregando</span><span class="intro-dots" aria-hidden="true"><i></i><i></i><i></i></span></div></div></div>
+<title>Spect — Arena de Batalha</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+
+<button type="button" id="rank-edge" aria-label="Abrir Mais" title="Abrir Mais">&#8250;</button>
+<button type="button" id="rank-mobile" aria-label="Abrir Mais" title="Abrir Mais"><span aria-hidden="true">☰</span> MAIS</button>
+<aside id="rank-sidebar" aria-label="Mais" aria-hidden="true">
+  <div class="rank-head"><h2>MAIS</h2><div><button type="button" id="open-modes">MODOS</button>  <button type="button" id="rank-close" aria-label="Fechar Mais">&times;</button></div></div>
+  <div class="more-tabs" role="tablist" aria-label="Mais opções">
+    <button type="button" class="more-tab active" data-panel="ranking" role="tab" aria-selected="true">RANKING</button>
+    <button type="button" class="more-tab" data-panel="history" role="tab" aria-selected="false">HIST&Oacute;RICO</button>
+    <button type="button" class="more-tab" data-panel="stats" role="tab" aria-selected="false">ESTAT&Iacute;STICAS</button>
+    <button type="button" class="more-tab" data-panel="records" role="tab" aria-selected="false">RECORDES</button>
+    <button type="button" class="more-tab" data-panel="rarity" role="tab" aria-selected="false">RARIDADE</button>
+    <button type="button" class="more-tab" data-panel="hall" role="tab" aria-selected="false">HALL DA FAMA</button>
+  </div>
+  <section class="more-panel active" data-panel-content="ranking" role="tabpanel">
+    <div class="rank-tabs" role="tablist" aria-label="Categorias de ranking">
+      <button type="button" class="rank-tab active" data-rank="damage" role="tab" aria-selected="true">MAIS DANO</button>
+      <button type="button" class="rank-tab" data-rank="wins" role="tab" aria-selected="false">VIT&Oacute;RIAS</button>
+      <button type="button" class="rank-tab" data-rank="fame" role="tab" aria-selected="false">FAMA</button>
+    </div>
+    <div id="rank-list" aria-live="polite"><div class="rank-empty">As classificações aparecerão depois das primeiras lutas.</div></div>
+    <p class="rank-foot">Os dados ficam salvos neste navegador.</p>
+  </section>
+  <section class="more-panel" data-panel-content="history" role="tabpanel"><div id="history-list" class="more-list"></div></section>
+  <section class="more-panel" data-panel-content="stats" role="tabpanel"><div id="stats-list" class="more-list"></div></section>
+  <section class="more-panel" data-panel-content="records" role="tabpanel"><div id="records-list" class="more-list"></div></section>
+  <section class="more-panel" data-panel-content="rarity" role="tabpanel"><div id="rarity-list" class="more-list"></div></section>
+  <section class="more-panel" data-panel-content="hall" role="tabpanel"><div class="hall-grid" id="hall-list"></div></section>
+</aside>
+
+<aside id="modes-sidebar" aria-label="Modos de jogo" aria-hidden="true">
+  <div class="rank-head"><h2>MODOS</h2><button type="button" id="modes-close" aria-label="Fechar Modos">&times;</button></div>
+  <div class="modes-list" id="mode-list">
+    <button type="button" class="mode-choice" id="mode-normal"><strong>NORMAL</strong><span>Batalhas padrão entre os lutadores da arena.</span></button>
+    <button type="button" class="mode-choice" id="mode-survival"><strong>SOBREVIV&Ecirc;NCIA</strong><span>Escolha um lutador e avance pelas arenas.</span></button>
+    <button type="button" class="mode-choice" id="mode-tournament"><strong>TORNEIO DAS ARTES</strong><span>Monte sua chave e dispute o campeonato Spect.</span></button><button type="button" class="mode-choice" id="mode-world"><strong>MUNDO</strong><span>Explore o mundo do Spect.</span></button>
+  </div>
+</aside>
+
+<aside id="world-screen" class="world-screen" aria-label="Mundo Spect" aria-hidden="true" hidden>
+  <div class="world-screen-title"><span>PERSONALIZE SEU AVATAR</span><strong>MUNDO <i>SPECT</i></strong></div>
+  <section class="world-preview" aria-label="Prévia 3D do personagem">
+    <div class="world-preview-label">PERSONAGEM <b>3D</b></div>
+    <div class="world-character-stage"><canvas id="world-canvas" aria-label="Personagem cúbico renderizado em 3D"></canvas><div class="world-webgl-fallback" id="world-webgl-fallback" hidden>Seu navegador não conseguiu iniciar a visualização 3D.</div></div>
+    <div class="world-avatar-name" id="world-avatar-name">LUTADOR DO MUNDO</div>
+    <p class="world-preview-hint">Avatar 3D com duas pernas. Personalize os acessórios e a aparência.</p>
+    <button type="button" class="world-start-button" id="world-start-button">COMEÇAR A EXPLORAR</button>
+  </section>
+  <div class="world-panels">
+    <section class="world-panel world-custom-panel"><h2><span>✦</span> PERSONALIZAÇÃO</h2>
+      <div class="world-option-group"><h3>CHAPÉU</h3><div class="world-choice-row" data-world-choice="hat"><button type="button" data-value="none" aria-label="Sem chapéu">—</button><button type="button" data-value="cap" aria-label="Boné">🧢</button><button type="button" data-value="crown" aria-label="Coroa">♛</button><button type="button" data-value="helmet" aria-label="Capacete">⛑️</button></div></div>
+      <div class="world-option-group"><h3>BOTAS</h3><div class="world-choice-row" data-world-choice="boots"><button type="button" data-value="sneaker" aria-label="Tênis">👟</button><button type="button" data-value="boot" aria-label="Bota">🥾</button><button type="button" data-value="armor" aria-label="Bota de armadura">◈</button></div></div>
+    </section>
+    <section class="world-panel world-character-panel"><h2><span>◉</span> PERSONAGEM</h2>
+      <label class="world-field">NOME<input id="world-name-input" type="text" maxlength="24" value="Lutador do Mundo" placeholder="Nome do personagem"></label>
+      <label class="world-upload-button">▧ TROCAR IMAGEM<input id="world-image-input" type="file" accept="image/*"></label><p class="world-field-hint">A imagem será aplicada em todas as faces do cubo.</p>
+      <div class="world-sound-controls"><button type="button" class="world-upload-button" id="world-generate-voice">? GERAR VOZ</button><button type="button" class="world-play-button" id="world-sound-play" disabled>▶ Ouvir som</button><label class="world-volume">VOLUME<input id="world-volume-input" type="range" min="0" max="100" value="50"></label><audio id="world-audio-preview" preload="none"></audio></div>
+    </section>
+  </div>
+  <nav class="world-back-rail" aria-label="Navegação do Mundo"><span class="world-rail-mark">S</span><button type="button" id="world-back" aria-label="Voltar ao jogo">←<small>VOLTAR</small></button></nav>
+  <div class="world-game-scene" id="world-game-scene" hidden><canvas id="world-game-canvas" aria-label="Cidade Spect em terceira pessoa"></canvas><button type="button" class="world-game-exit" id="world-game-exit" aria-label="Voltar à personalização">←</button><div class="world-game-message" id="world-game-message" hidden>Carregando a cidade...</div><div class="world-joystick" id="world-joystick" hidden><i></i></div></div>
+</aside>
+<div id="battle-screen" aria-label="Tela da batalha" aria-live="polite">
+  <div class="battle-topline"><span>ARENA DE COMBATE</span><strong id="battle-format-label">RODADA EM ANDAMENTO</strong><span id="battle-round">RODADA 1</span></div>
+  <div class="battle-hud">
+    <div class="battle-hud-side left"><div class="battle-hud-name"><span id="battle-name-0">Lutador 1</span><span id="battle-hp-0">100%</span></div><div class="battle-hp"><i id="battle-bar-0"></i></div></div>
+    <div class="battle-hud-side right"><div class="battle-hud-name"><span id="battle-name-1">Lutador 2</span><span id="battle-hp-1">100%</span></div><div class="battle-hp"><i id="battle-bar-1"></i></div></div>
+  </div>
+  <div class="battle-stage" id="battle-stage">
+    <span class="battle-light left"></span><span class="battle-light right"></span><span class="battle-centerline"></span>
+    <div class="battle-special" id="battle-special"></div>
+    <div class="battle-attack-fx" id="battle-attack-fx" aria-hidden="true">
+      <span class="battle-fx-core"></span>
+      <svg class="battle-fx-art art-breath" viewBox="0 0 300 150" aria-hidden="true">
+        <defs><linearGradient id="breathFill" x1="0" x2="1"><stop stop-color="var(--attack-color)" stop-opacity="0"/><stop offset=".38" stop-color="var(--attack-color)"/><stop offset=".68" stop-color="#fff4bd"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+        <path d="M8 75 286 18 238 73 293 132Z" fill="url(#breathFill)"/>
+        <path d="M20 74Q82 26 150 64Q205 34 264 42Q222 75 270 103Q205 119 151 88Q81 124 20 74Z" fill="var(--attack-color)" opacity=".88"/>
+        <path d="M15 75Q104 54 244 75Q114 91 15 75Z" fill="#fff" opacity=".9"/>
+        <path d="M60 42q28-30 57-13M91 108q32 25 67 10" fill="none" stroke="#fff1b0" stroke-width="5" stroke-linecap="round"/>
+      </svg>
+      <svg class="battle-fx-art art-splash" viewBox="0 0 300 150" aria-hidden="true">
+        <path d="M150 127 131 91 97 111 109 76 68 73 104 54 78 26 122 40 136 8 153 42 183 17 181 53 225 43 197 70 236 88 192 93 207 124 169 106Z" fill="var(--attack-color)" stroke="#dffaff" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M137 108 125 82 104 91 117 68 96 62 124 56 132 32 149 57 169 40 166 66 193 69 172 84 183 105 158 94Z" fill="#e9fcff" opacity=".9"/>
+        <path d="M50 53c-11-18 7-33 12-48 13 22 24 35 12 50a16 16 0 0 1-24-2ZM223 43c-9-16 7-27 12-40 11 19 19 29 9 42a14 14 0 0 1-21-2ZM90 137c-7-12 5-22 9-32 9 15 15 23 7 34a10 10 0 0 1-16-2Z" fill="var(--attack-color)" stroke="#e9fcff" stroke-width="3"/>
+      </svg>
+      <svg class="battle-fx-art art-ball" viewBox="0 0 300 150" aria-hidden="true">
+        <defs><radialGradient id="orbFill" cx=".35" cy=".3"><stop stop-color="#fff"/><stop offset=".25" stop-color="var(--attack-color)"/><stop offset="1" stop-color="#17122c"/></radialGradient></defs>
+        <ellipse cx="150" cy="75" rx="120" ry="43" fill="none" stroke="var(--attack-color)" stroke-width="5" transform="rotate(-18 150 75)"/>
+        <ellipse cx="150" cy="75" rx="106" ry="30" fill="none" stroke="#fff" stroke-width="2" opacity=".7" transform="rotate(24 150 75)"/>
+        <circle cx="150" cy="75" r="48" fill="url(#orbFill)" stroke="#fff" stroke-width="4"/>
+        <path d="M122 91q29-42 59-40M118 108q38 13 64-4" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="38" cy="91" r="7" fill="#fff"/><circle cx="251" cy="43" r="6" fill="var(--attack-color)"/><circle cx="216" cy="123" r="5" fill="#fff"/>
+      </svg>
+      <svg class="battle-fx-art art-matter" viewBox="0 0 300 150" aria-hidden="true">
+        <path d="m28 99 17-30 27-4 12-29 32 21-3 30-23 32-39 10Z" fill="var(--attack-color)" stroke="#f5e6c8" stroke-width="4" stroke-linejoin="round"/>
+        <path d="m81 58 26-37 30 22 25-12 23 33-16 41-38 20-35-21Z" fill="#8c7b68" stroke="#f5e6c8" stroke-width="4" stroke-linejoin="round"/>
+        <path d="m183 76 26-34 37 5 26 29-19 39-44 6-27-18Z" fill="var(--attack-color)" stroke="#f5e6c8" stroke-width="4" stroke-linejoin="round"/>
+        <path d="m128 51 11-8 10 11-10 22-12-8ZM207 66l12-12 12 16-9 17-13-6ZM54 82l12-8 10 12-14 18-10-9Z" fill="#f9e6bc"/>
+        <path d="m24 48 10-15 12 15-10 14ZM263 35l9-17 14 19-12 14ZM147 137l10-14 13 13-12 9Z" fill="#d5d0ca"/>
+      </svg>
+    </div>
+    <div class="battle-cinematic-bars" id="battle-cinematic-bars" aria-hidden="true"><i></i><i></i></div>
+    <div class="battle-fighter left" id="battle-fighter-0"><span class="battle-team-band" aria-hidden="true"></span><img id="battle-img-0" alt="Lutador 1"></div>
+    <div class="battle-fighter right" id="battle-fighter-1"><span class="battle-team-band" aria-hidden="true"></span><img id="battle-img-1" alt="Lutador 2"></div>
+    <div class="battle-nameplate left" id="battle-plate-0"></div><div class="battle-nameplate right" id="battle-plate-1"></div>
+    <div class="battle-winner" id="battle-winner"><div class="battle-winner-label">VIT&Oacute;RIA!</div><img id="battle-winner-img" alt="Lutador vencedor"><div class="battle-winner-name" id="battle-winner-name"></div><div class="battle-return">Retornando à arena principal...</div></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <header>
+    <div class="brandline"><span class="brand-mark">S</span><div><h1>SPECT<span class="brand-dot">.</span></h1><p>IMAGE BATTLE SYSTEM <i>•</i> CONSTRUA SEUS LUTADORES E ENTRE NA ARENA</p></div><span class="system-online"><b></b> SISTEMA ONLINE</span></div>
+  </header>
+
+  <div class="game-toolbar"><div><span class="toolbar-kicker">MODO DE JOGO</span><strong id="toolbar-mode">NORMAL</strong></div><div class="toolbar-center"><span class="live-dot"></span> ARENA PRONTA</div><div class="world-clock" aria-label="Rel\u00f3gio do jogo"><span>TEMPO SPECT</span><strong id="game-clock">01/01/2025 08:00</strong></div><div class="toolbar-right">2 JOGADORES <span>&bull;</span> 1 VENCEDOR</div></div>
+  <section id="tournament-screen" class="feature-screen" hidden>
+    <div class="feature-head"><div><span class="feature-kicker">CAMPEONATO OFICIAL</span><h2>TORNEIO DAS ARTES</h2></div><button type="button" class="btn" data-feature-back>Voltar ao jogo</button></div>
+    <div id="tournament-config" class="feature-panel">
+      <label class="tournament-size-label">Tamanho da chave <select id="tournament-size"><option value="4">4 participantes · teste rápido</option><option value="8" selected>8 participantes</option><option value="16">16 participantes</option><option value="32">32 participantes</option><option value="64">64 participantes</option></select></label>
+      <div class="tournament-options"><label><input type="checkbox" id="tournament-select-all"> Selecionar todos os lutadores disponíveis</label><label><input type="checkbox" id="tournament-random-fill"> Preencher vagas restantes aleatoriamente</label></div>
+      <p id="tournament-roster-count" class="feature-muted"></p><div id="tournament-roster" class="tournament-roster"></div>
+      <p id="tournament-notice" class="feature-notice" aria-live="polite"></p><button type="button" class="btn primary" id="tournament-create">Criar campeonato</button>
+    </div>
+    <div id="tournament-board" class="feature-panel" hidden><div class="tournament-board-head"><div><h3 id="tournament-title"></h3><p id="tournament-status" class="feature-muted"></p></div><div class="tournament-board-actions"><button type="button" class="btn" id="tournament-speed" aria-label="Alternar velocidade do torneio" aria-pressed="false">Velocidade 1x</button><button type="button" class="btn" id="tournament-new">Novo torneio</button></div></div><div id="tournament-next-pairings"></div><p id="tournament-auto-status" class="feature-notice" aria-live="polite"></p><button type="button" class="btn primary" id="tournament-advance" hidden>AVAN&Ccedil;AR RODADA INTEIRA</button><div class="bracket-scroll"><div id="tournament-bracket" class="tournament-bracket"></div></div><div id="tournament-champion" class="tournament-champion" hidden></div></div>
+    <div class="feature-panel"><h3>HIST&Oacute;RICO DE TORNEIOS</h3><div id="tournament-history" class="feature-list"></div></div>
+  </section>
+  <main class="arena" id="arena">
+    <article class="card" id="card0" aria-label="Lutador 1"></article>
+
+    <div class="center">
+      <div class="vs" aria-hidden="true">VS</div>
+      <button type="button" class="btn primary" id="fightBtn" disabled>Lutar</button>
+      <button type="button" class="btn" id="two-by-two-toggle" aria-pressed="false">2x2: Desativado</button>
+      <button type="button" class="btn" id="sampleBtn">Sortear exemplos</button>
+      <label class="bot-upload" id="bot-upload-wrap" hidden>Sua imagem<input id="bot-image-upload" type="file" accept="image/*"></label>
+      <p class="bot-status" id="bot-status" aria-live="polite" hidden>Escolha uma imagem para preparar a luta.</p>
+      <section id="survival-progress" hidden><h3>SOBREVIV&Ecirc;NCIA</h3><div id="survival-progress-text"></div><div id="survival-xp"></div><div id="survival-evolution" class="evolution-list"></div></section>
+      <section id="survival-message" hidden><h3 id="survival-message-title"></h3><p id="survival-message-text"></p><button type="button" class="btn primary" id="survival-continue">Continuar jornada</button><button type="button" class="btn" id="survival-end">Encerrar partida</button></section>
+      <div id="achievement-toast" role="status" aria-live="polite" hidden></div>
+      <button type="button" class="btn" id="speedBtn" aria-label="Velocidade da luta">Velocidade 1x</button>
+      <button type="button" class="btn" id="muteBtn" aria-pressed="false">Música ligada</button>
+    </div>
+
+    <article class="card" id="card1" aria-label="Lutador 2"></article>
+    <article class="card" id="card2" aria-label="Lutador 3" hidden></article>
+    <article class="card" id="card3" aria-label="Lutador 4" hidden></article>
+  </main>
+
+  <section class="community" aria-label="Comunidade Spect">
+    <div class="community-head"><h2 class="community-title">PRAÇA DA ARENA</h2><span class="community-status">● comunidade ativa</span></div>
+    <form class="community-compose" id="social-form">
+      <input id="social-input" type="text" maxlength="220" autocomplete="off" placeholder="Compartilhe algo com a comunidade..." aria-label="Escreva uma mensagem">
+      <button type="submit">PUBLICAR</button>
+    </form>
+    <div class="community-feed" id="social-feed" aria-live="polite"></div>
+  </section>
+
+  <p class="foot">Tudo roda no seu navegador. As imagens não são enviadas para nenhum servidor. Os dois lutadores iniciais são exemplos desenhados na hora.</p>
+</div>
+
+
+
+
+
+<script src="spect-world.js?v=city-multiplayer-mobile-1"></script>
+<script src="spect.js?v=generated-player-voice-2"></script>
+</body></html>
