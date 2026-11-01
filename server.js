@@ -82,7 +82,7 @@ webSockets.on('connection', (socket, request) => {
   const url = new URL(request.url, 'http://localhost');
   const roomId = String(url.searchParams.get('room') || '').replace(/[^a-z0-9_-]/gi, '').slice(0, 32);
   if (!roomId) {
-    socket.close(1008, 'Código da sala ausente');
+    socket.close(1008, 'CÃ³digo da sala ausente');
     return;
   }
 
@@ -107,6 +107,13 @@ webSockets.on('connection', (socket, request) => {
   socket.on('message', raw => {
     let message;
     try { message = JSON.parse(raw.toString()); } catch (_) { return; }
+    if (message.type === 'chat') {
+      const text = String(message.text || '').trim().slice(0, 180);
+      if (!text) return;
+      const player = room.players.get(id);
+      broadcast(room, { type: 'chat', id, name: player && player.name || 'Explorador', text, time: Date.now() });
+      return;
+    }
     if (message.type !== 'state') return;
     const player = cleanPlayer(message.player, room.players.get(id));
     room.players.set(id, player);
@@ -126,3 +133,4 @@ webSockets.on('connection', (socket, request) => {
 });
 
 server.listen(PORT, '0.0.0.0', () => console.log(`Spect pronto na porta ${PORT}`));
+

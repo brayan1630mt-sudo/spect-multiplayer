@@ -1,4 +1,4 @@
-﻿:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
+:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
 /* Tela de combate: arena quadrada com cenÃ¡rio fixo e lutadores animados */
 #battle-screen { position:fixed; inset:0; z-index:2000; display:none; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:16px; background:radial-gradient(ellipse at 50% 40%,#202a43 0%,#101522 48%,#080a10 100%); }
 body.battle-mode { overflow:hidden; }
@@ -510,3 +510,22 @@ body.survival-mode .arena{grid-template-columns:minmax(0,1fr) minmax(230px,260px
 @media(max-width:1000px) and (orientation:portrait) and (pointer:coarse){.world-joystick{width:112px;height:112px;margin:-56px 0 0 -56px}.world-joystick i{width:44px;height:44px;margin:-22px}.world-multiplayer-controls{top:max(8px,env(safe-area-inset-top));right:max(8px,env(safe-area-inset-right));max-width:45vw}.world-net-button{min-height:40px}}
 
 @media(max-width:1000px) and (pointer:coarse){.world-interact-hint{pointer-events:auto;cursor:pointer;padding:8px 12px;border:1px solid #ffffff55;border-radius:22px;background:#101827b8;touch-action:manipulation}}
+
+/* Chat de sala multiplayer */
+.world-net-chat{width:min(300px,48vw);display:flex;flex-direction:column;gap:7px;padding:9px;border:1px solid #78dff088;border-radius:10px;background:linear-gradient(150deg,#0c1725ed,#101e31e8);box-shadow:0 8px 24px #0008;pointer-events:auto}
+.world-net-chat[hidden]{display:none}
+.world-net-chat-messages{height:170px;overflow-y:auto;display:flex;flex-direction:column;gap:5px;padding:6px;border-radius:6px;background:#050b13aa;color:#eaf6ff;font:500 11px/1.4 var(--font-mono,monospace);overflow-wrap:anywhere}
+.world-net-chat-empty{margin:auto;color:#a9c6d7;text-align:center}
+.world-net-chat-line strong{color:#70e4f4}
+.world-net-chat-line.self strong{color:#ffc76a}
+.world-net-chat-form{display:flex;gap:5px}
+.world-net-chat-input{min-width:0;flex:1;height:36px;padding:0 9px;border:1px solid #6b91a888;border-radius:6px;background:#07111e;color:#fff;font:500 11px var(--font-mono,monospace)}
+.world-net-chat-form button{padding:0 9px;border:1px solid #6ddff0aa;border-radius:6px;background:#14344a;color:#eafaff;font:700 10px var(--font-mono,monospace)}
+@media(max-width:1000px) and (orientation:landscape) and (pointer:coarse){.world-net-chat{width:min(280px,46vw)}.world-net-chat-messages{height:120px}.world-net-chat-input{height:40px}}
+@media(max-width:1000px) and (orientation:portrait) and (pointer:coarse){.world-net-chat{width:min(270px,78vw)}.world-net-chat-messages{height:110px}}
+
+/* Botão de pulo do Mundo 3D */
+.world-jump-button{position:absolute;right:max(24px,env(safe-area-inset-right));bottom:max(28px,env(safe-area-inset-bottom));z-index:8;width:76px;height:76px;border:1px solid #d6f7ffbb;border-radius:50%;background:radial-gradient(circle at 35% 30%,#55dff0dd,#126a93e8);color:#f3fcff;font:800 12px var(--font-mono,monospace);letter-spacing:.04em;box-shadow:0 5px 18px #001c35a8,inset 0 0 12px #baf8ff55;touch-action:none;user-select:none;-webkit-user-select:none}
+.world-jump-button:active{transform:scale(.92);background:radial-gradient(circle at 35% 30%,#8af4ff,#1688b4)}
+.world-jump-button[hidden]{display:none}
+@media(max-width:1000px) and (orientation:landscape) and (pointer:coarse){.world-jump-button{right:max(34px,env(safe-area-inset-right));bottom:max(34px,env(safe-area-inset-bottom));width:84px;height:84px}}
