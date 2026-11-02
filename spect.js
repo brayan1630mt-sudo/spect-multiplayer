@@ -7,7 +7,7 @@
   var sleep = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
 
 
-  /* Limpa dados persistentes da versÃ£o anterior; as sessÃµes novas comeÃ§am vazias. */
+  /* Limpa dados persistentes da versão anterior; as sessões novas começam vazias. */
   try {
     localStorage.removeItem('arenaPixelsRankings');
     localStorage.removeItem('arenaPixelsBattleHistory');
@@ -24,23 +24,23 @@
     var entries = Object.keys(rankData).map(function (key) { return rankData[key]; });
     var field = rankCategory === 'damage' ? 'damage' : rankCategory === 'wins' ? 'wins' : 'fame';
     entries.sort(function (a, b) { return (b[field] || 0) - (a[field] || 0) || a.name.localeCompare(b.name); });
-    if (!entries.length) { list.innerHTML = '<div class="rank-empty">As classificaÃ§Ãµes aparecerÃ£o depois das primeiras lutas.</div>'; return; }
+    if (!entries.length) { list.innerHTML = '<div class="rank-empty">As classificações aparecerão depois das primeiras lutas.</div>'; return; }
     list.innerHTML = entries.slice(0, 50).map(function (entry, index) {
-      var value = rankCategory === 'damage' ? (entry.damage || 0) + ' dano' : rankCategory === 'wins' ? (entry.wins || 0) + ' vitÃ³rias' : (entry.fame || 0) + ' fama';
+      var value = rankCategory === 'damage' ? (entry.damage || 0) + ' dano' : rankCategory === 'wins' ? (entry.wins || 0) + ' vitórias' : (entry.fame || 0) + ' fama';
       var portrait = '';
       if (index < 3) {
         portrait = entry.portrait
           ? '<img class="rank-portrait" src="' + escapeRank(entry.portrait) + '" alt="Imagem de ' + escapeRank(entry.name) + '">'
           : '<span class="rank-portrait placeholder" aria-hidden="true">' + escapeRank(entry.name.charAt(0)) + '</span>';
       }
-      return '<div class="rank-entry' + (index < 3 ? ' has-portrait' : '') + '"><div class="rank-pos">#' + (index + 1) + '</div>' + portrait + '<div><div class="rank-name">' + escapeRank(entry.name) + '</div><div class="rank-sub">' + escapeRank(entry.type) + ' Â· ' + (entry.battles || 0) + ' lutas</div></div><div class="rank-value">' + value + '</div></div>';
+      return '<div class="rank-entry' + (index < 3 ? ' has-portrait' : '') + '"><div class="rank-pos">#' + (index + 1) + '</div>' + portrait + '<div><div class="rank-name">' + escapeRank(entry.name) + '</div><div class="rank-sub">' + escapeRank(entry.type) + ' · ' + (entry.battles || 0) + ' lutas</div></div><div class="rank-value">' + value + '</div></div>';
     }).join('');
   }
   function escapeRank(value) { return String(value).replace(/[&<>"']/g, function (c) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]); }); }
   var battleHistory = [];
   try { battleHistory = JSON.parse(sessionStorage.getItem('arenaPixelsBattleHistory') || '[]') || []; } catch (e) { battleHistory = []; }
   function rarityFor(score) {
-    return score >= 340 ? 'LendÃ¡rio' : score >= 300 ? 'Ã‰pico' : score >= 260 ? 'Raro' : score >= 220 ? 'Incomum' : 'Comum';
+    return score >= 340 ? 'Lendário' : score >= 300 ? 'Épico' : score >= 260 ? 'Raro' : score >= 220 ? 'Incomum' : 'Comum';
   }
   function moreCard(label, value, sub) {
     return '<div class="more-stat"><div class="more-stat-label">' + label + '</div><div class="more-stat-value">' + value + '</div>' + (sub ? '<div class="more-stat-sub">' + sub + '</div>' : '') + '</div>';
@@ -61,8 +61,8 @@
     var recent = battleHistory.slice().sort(function (a, b) { return b.time - a.time; });
     historyList.innerHTML = recent.length ? recent.slice(0, 50).map(function (match) {
       var when = gameDate(match.time).toLocaleString('pt-BR');
-      return '<div class="more-stat"><div class="more-stat-label">' + when + '</div><div class="more-stat-value">' + escapeRank(match.winner) + ' venceu</div><div class="more-stat-sub">' + escapeRank(match.loser) + ' Â· dano causado: ' + match.winnerDamage + ' x ' + match.loserDamage + '</div></div>';
-    }).join('') : '<div class="rank-empty">As lutas concluÃ­das aparecerÃ£o aqui.</div>';
+      return '<div class="more-stat"><div class="more-stat-label">' + when + '</div><div class="more-stat-value">' + escapeRank(match.winner) + ' venceu</div><div class="more-stat-sub">' + escapeRank(match.loser) + ' · dano causado: ' + match.winnerDamage + ' x ' + match.loserDamage + '</div></div>';
+    }).join('') : '<div class="rank-empty">As lutas concluídas aparecerão aqui.</div>';
     statsList.innerHTML = [
       moreCard('Vit\u00f3rias', totalWins, 'Total de vit\u00f3rias dos lutadores registrados'),
       moreCard('Derrotas', losses, 'Total de derrotas dos lutadores registrados'),
@@ -78,15 +78,15 @@
       moreCard('Lutas disputadas', Math.round(totalFights / 2), 'Contagem acumulada'),
       moreCard('Maior dano em uma luta', biggestHit ? biggestHit.damage : 0, biggestHit ? 'Por ' + escapeRank(biggestHit.name) : ''),
       moreCard('Mais vit\u00f3rias', mostWins ? mostWins.wins : 0, mostWins ? escapeRank(mostWins.name) : '')
-    ].join('') : '<div class="rank-empty">Seus recordes aparecerÃ£o depois das primeiras lutas.</div>';
+    ].join('') : '<div class="rank-empty">Seus recordes aparecerão depois das primeiras lutas.</div>';
     recordsList.innerHTML += [moreCard('Advers\u00e1rios derrotados', survivalRecords.defeated, 'Modo Sobreviv\u00eancia'), moreCard('Arenas conclu\u00eddas', survivalRecords.maxArenas, 'Recorde da jornada'), moreCard('Chef\u00f5es derrotados', survivalRecords.bosses, 'Modo Sobreviv\u00eancia'), moreCard('Mini-chefes derrotados', survivalRecords.mini, 'Modo Sobreviv\u00eancia')].join('');
     var rarityEntries = roster.map(function (entry) {
       var score = entry.rarityScore || 0;
       return {entry:entry, score:score, rarity:rarityFor(score)};
     }).sort(function (a, b) { return b.score - a.score; });
     rarityList.innerHTML = rarityEntries.length ? rarityEntries.map(function (item) {
-      return moreCard(item.rarity, escapeRank(item.entry.name), escapeRank(item.entry.type) + ' Â· poder ' + item.score);
-    }).join('') : '<div class="rank-empty">A raridade dos lutadores aparecerÃ¡ depois das primeiras lutas.</div>';
+      return moreCard(item.rarity, escapeRank(item.entry.name), escapeRank(item.entry.type) + ' · poder ' + item.score);
+    }).join('') : '<div class="rank-empty">A raridade dos lutadores aparecerá depois das primeiras lutas.</div>';
   }
   function saveTwoByTwoRanking(winnerSide){
     var teams=twoByTwoBattle.teams,now=Date.now();
@@ -120,7 +120,7 @@
     persistCareer();renderRanking();renderMorePanels();renderHall();return resultToken?careerData.appliedResults[resultToken]:null;
   }
 
-  /* ---------- aleatÃ³rio com semente ---------- */
+  /* ---------- aleatório com semente ---------- */
   function hashStr(s) {
     var h = 1779033703 ^ s.length;
     for (var i = 0; i < s.length; i++) { h = Math.imul(h ^ s.charCodeAt(i), 3432918353); h = (h << 13) | (h >>> 19); }
@@ -140,11 +140,11 @@
   /* ---------- elementos ---------- */
   var TYPES = {
     'Fogo':   { color: '#ff6a3d', beats: 'Planta', move: 'Brasa Pixelada' },
-    'Planta': { color: '#6fd26a', beats: 'Ãgua',   move: 'Chicote de CipÃ³' },
-    'Ãgua':   { color: '#4db8ff', beats: 'Fogo',   move: 'MarÃ© de Bits' },
+    'Planta': { color: '#6fd26a', beats: 'Água',   move: 'Chicote de Cipó' },
+    'Água':   { color: '#4db8ff', beats: 'Fogo',   move: 'Maré de Bits' },
     'Luz':    { color: '#ffd75e', beats: 'Sombra', move: 'Flash Dourado' },
-    'Sombra': { color: '#9a9fc4', beats: 'Ã‰ter',   move: 'Eclipse Cego' },
-    'Ã‰ter':   { color: '#b57bff', beats: 'Luz',    move: 'Pulso EtÃ©reo' }
+    'Sombra': { color: '#9a9fc4', beats: 'Éter',   move: 'Eclipse Cego' },
+    'Éter':   { color: '#b57bff', beats: 'Luz',    move: 'Pulso Etéreo' }
   };
   function typeMult(att, def) {
     if (TYPES[att].beats === def) return 1.3;
@@ -158,11 +158,11 @@
     var h = f.hue;
     if (h < 45 || h >= 345) return 'Fogo';
     if (h < 165) return 'Planta';
-    if (h < 255) return 'Ãgua';
-    return 'Ã‰ter';
+    if (h < 255) return 'Água';
+    return 'Éter';
   }
 
-  /* ---------- IA bÃ¡sica: lÃª a imagem ---------- */
+  /* ---------- IA básica: lê a imagem ---------- */
   function analyze(img) {
     var N = 64, c = document.createElement('canvas');
     c.width = c.height = N;
@@ -215,7 +215,7 @@
   }
 
   var SYL = ['ka', 'zu', 'mi', 'ro', 'tel', 'vor', 'bi', 'lun', 'dra', 'xe', 'pa', 'nok', 'sha', 'gri', 'to', 'mu', 'fen', 'ul', 'qui', 'ba'];
-  var TITLES = { atq: 'O Brutamontes', def: 'A Muralha', vel: 'O RelÃ¢mpago', esp: 'A Anomalia', hp: 'O Colosso' };
+  var TITLES = { atq: 'O Brutamontes', def: 'A Muralha', vel: 'O Relâmpago', esp: 'A Anomalia', hp: 'O Colosso' };
 
   function buildFighter(f, src, isSample) {
     var key = [f.bri, f.sat, f.con, f.edge, f.sym, f.variety, f.warm, f.hue / 360, f.dark].map(function (v) { return v.toFixed(3); }).join('|');
@@ -316,7 +316,7 @@
     var gain=.28/peak;for(i=0;i<length;i++)out[i]*=gain;out[length-1]=0;return out;
   }
   window.SPECT_CREATE_SPEECH=function(seed,seconds){var value=Number(seed)||Math.floor(Math.random()*0x7fffffff);return {samples:makeSpeechSamples(null,value,seconds||1),sampleRate:SR}};
-  window.SPECT_CREATE_IMAGE_SPEECH=function(file,seconds,variationSeed){return new Promise(function(resolve,reject){if(!file){reject(new Error('Imagem do personagem nÃ£o selecionada'));return}var url=URL.createObjectURL(file),img=new Image();img.onload=function(){try{var features=analyze(img),key=[features.bri,features.sat,features.con,features.edge,features.sym,features.variety,features.warm,features.hue/360,features.dark].map(function(v){return v.toFixed(3)}).join('|'),seed=hashStr(key),rng=mulberry(seed),profile=soundParams(features,rng),variation=Number(variationSeed)||Math.floor(Math.random()*0x7fffffff);URL.revokeObjectURL(url);resolve({samples:makeSpeechSamples(profile.traits,(seed^variation^Math.floor(Math.random()*0x7fffffff))>>>0,seconds||1),sampleRate:SR})}catch(error){URL.revokeObjectURL(url);reject(error)}};img.onerror=function(){URL.revokeObjectURL(url);reject(new Error('NÃ£o foi possÃ­vel analisar a imagem do personagem'))};img.src=url})};
+  window.SPECT_CREATE_IMAGE_SPEECH=function(file,seconds,variationSeed){return new Promise(function(resolve,reject){if(!file){reject(new Error('Imagem do personagem não selecionada'));return}var url=URL.createObjectURL(file),img=new Image();img.onload=function(){try{var features=analyze(img),key=[features.bri,features.sat,features.con,features.edge,features.sym,features.variety,features.warm,features.hue/360,features.dark].map(function(v){return v.toFixed(3)}).join('|'),seed=hashStr(key),rng=mulberry(seed),profile=soundParams(features,rng),variation=Number(variationSeed)||Math.floor(Math.random()*0x7fffffff);URL.revokeObjectURL(url);resolve({samples:makeSpeechSamples(profile.traits,(seed^variation^Math.floor(Math.random()*0x7fffffff))>>>0,seconds||1),sampleRate:SR})}catch(error){URL.revokeObjectURL(url);reject(error)}};img.onerror=function(){URL.revokeObjectURL(url);reject(new Error('Não foi possível analisar a imagem do personagem'))};img.src=url})};
 
   var ctx = null, master = null, muted = false, musicMuted = false, backgroundMusic = document.getElementById('background-music'), battleMusic = document.getElementById('battle-music');window.SPECT_MUSIC_MUTED=musicMuted;
   if(backgroundMusic){backgroundMusic.volume=0.5;backgroundMusic.muted=musicMuted}
@@ -351,7 +351,8 @@
   document.addEventListener('pointerdown',function(event){if(event.button!==undefined&&event.button!==0)return;var target=event.target;if(!target||!target.closest)return;var control=target.closest('button,a,input,select,textarea,summary,label,[role="tab"],[role="button"],[data-like],.mode-choice');if(!control||control.disabled||control.closest('.snd,#fightBtn,#speedBtn,#muteBtn,#battle-screen'))return;playUiClick()},true);
 
   /* ---------- fichas ---------- */
-  var F = [null, null, null, null], urls = [null, null, null, null], busy = false, speed = 1, runId = 0, survivalImageLocked = false, botPreparing = false, gameMode = 'normal';
+  var F = [null, null, null, null], urls = [null, null, null, null], busy = false, speed = 1, runId = 0, survivalImageLocked = false, botPreparing = false, gameMode = 'normal', onlineBattleRng = null, activeOnlineDuel = null;
+  function battleRandom(){return onlineBattleRng?onlineBattleRng():Math.random()}
   var twoByTwoEnabled=false,twoByTwoBattle=null;
   var evolution = { imageKey: '', points: 0, levels: { atq: 0, def: 0, vel: 0, esp: 0, hp: 0 } }, evolutionApplied = false;
   var survival = { active:false, imageKey:'', defeated:0, arenas:0, mini:0, bosses:0, streak:0, level:1, xp:0, damage:0, enemyClass:'normal', arena:1, encounter:1, awaitingArena:false, ended:false, bossStartHp:0 };
@@ -384,7 +385,7 @@
 
   function cardHTML(i) {
     return '' +
-      '<div class="card-top"><span class="slot">'+(i===0?'Equipe azul Â· Lutador 1':i===1?'Equipe vermelha Â· Lutador 1':i===2?'Equipe azul Â· Lutador 2':'Equipe vermelha Â· Lutador 2')+'</span><span class="chip" data-f="type">...</span></div>' +
+      '<div class="card-top"><span class="slot">'+(i===0?'Equipe azul · Lutador 1':i===1?'Equipe vermelha · Lutador 1':i===2?'Equipe azul · Lutador 2':'Equipe vermelha · Lutador 2')+'</span><span class="chip" data-f="type">...</span></div>' +
       '<label class="frame" data-f="frame">' +
         '<img data-f="img" alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">' +
         '<span class="scan"></span><span class="hint">Trocar imagem</span>' +
@@ -399,7 +400,7 @@
         '<button type="button" class="snd" data-f="sndHurt"><span>Som de dano</span><canvas width="160" height="28"></canvas></button>' +
       '</div>' +
       '<details><summary>Leitura da IA</summary><dl data-f="read"></dl>' +
-      '<p class="note">ATQ vem da saturaÃ§Ã£o e do contraste. DEF, da simetria e das Ã¡reas escuras. VEL, dos detalhes e do brilho. ESP, da variedade de cores. A cor dominante define o elemento e o perfil dos sons, com valores de -100 a +100.</p></details>';
+      '<p class="note">ATQ vem da saturação e do contraste. DEF, da simetria e das áreas escuras. VEL, dos detalhes e do brilho. ESP, da variedade de cores. A cor dominante define o elemento e o perfil dos sons, com valores de -100 a +100.</p></details>';
   }
   var cardEl = function (i) { return $('#card' + i); };
   var q = function (el, k) { return el.querySelector('[data-f="' + k + '"]'); };
@@ -421,20 +422,20 @@
     var img = q(el, 'img'); img.src = f.src; img.alt = 'Imagem de ' + f.name;
     q(el, 'type').textContent = f.type;
     q(el, 'name').textContent = f.name;
-    q(el, 'title').textContent = f.title + ' Â· elemento ' + f.type.toLowerCase();
+    q(el, 'title').textContent = f.title + ' · elemento ' + f.type.toLowerCase();
     q(el, 'sample').hidden = !f.isSample;
     q(el, 'stats').innerHTML = STAT_ROWS.map(function (r) {
       return '<div class="st"><span class="k">' + r[0] + '</span><div class="bar thin"><i style="width:' + Math.min(100, f.stats[r[1]]) + '%"></i></div><span class="v">' + f.stats[r[1]] + '</span></div>';
     }).join('');
     var ft = f.feat;
     q(el, 'read').innerHTML = [
-      ['Brilho', pct(ft.bri)], ['SaturaÃ§Ã£o', pct(ft.sat)], ['Contraste', pct(ft.con)], ['Detalhes', pct(ft.edge)],
-      ['Simetria', pct(ft.sym)], ['Variedade de cores', pct(ft.variety)], ['Ãreas escuras', pct(ft.dark)], ['Matiz dominante', Math.round(ft.hue) + 'Â°'],
+      ['Brilho', pct(ft.bri)], ['Saturação', pct(ft.sat)], ['Contraste', pct(ft.con)], ['Detalhes', pct(ft.edge)],
+      ['Simetria', pct(ft.sym)], ['Variedade de cores', pct(ft.variety)], ['Áreas escuras', pct(ft.dark)], ['Matiz dominante', Math.round(ft.hue) + '°'],
       ['Som - tom', f.soundTraits.tone], ['Som - brilho', f.soundTraits.brightness], ['Som - contraste', f.soundTraits.contrast],
       ['Som - satura\u00e7\u00e3o', f.soundTraits.saturation], ['Som - cromin\u00e2ncia', f.soundTraits.chroma], ['Som - ritmo', f.soundTraits.rhythm],
       ['Som - simetria', f.soundTraits.symmetry], ['Som - variedade', f.soundTraits.complexity], ['Som - calor', f.soundTraits.warmth], ['Som - profundidade', f.soundTraits.depth]
     ].map(function (r) {
-      var isSound = r[0].indexOf('Som Â·') === 0;
+      var isSound = r[0].indexOf('Som ·') === 0;
       return '<dt>' + r[0] + '</dt><dd>' + (isSound ? (r[1] > 0 ? '+' : '') + r[1] + ' / 100' : r[1]) + '</dd>';
     }).join('');
     drawWave(q(el, 'sndAtk').querySelector('canvas'), f.sounds.atk.peaks, col);
@@ -451,7 +452,7 @@
     q(cardEl(i), 'gauge').firstElementChild.style.width = clamp(F[i].gauge, 0, 100) + '%';
   }
 
-  /* ---------- registro de combate removido: a Ã¡rea foi substituÃ­da pelo feed social ---------- */
+  /* ---------- registro de combate removido: a área foi substituída pelo feed social ---------- */
   function log() {}
 
   /* ---------- carregar imagem ---------- */
@@ -511,8 +512,8 @@
 
   function resetBattleView(keepPlayerHp) {
     runId++; busy = false;
-    // O banner pertence ao antigo painel de feedback, removido na versÃ£o social.
-    // Verifica se ele existe para nÃ£o interromper a leitura e a exibiÃ§Ã£o das imagens.
+    // O banner pertence ao antigo painel de feedback, removido na versão social.
+    // Verifica se ele existe para não interromper a leitura e a exibição das imagens.
     var banner = $('#banner');
     if (banner) banner.hidden = true;
     [0, 1, 2, 3].forEach(function (i) {
@@ -583,9 +584,9 @@
   async function loadTwoByTwoSamples(){botPreparing=true;setLocked(true);var picks=[];for(var i=0;i<4;i++){var style=STYLES[(Math.random()*STYLES.length)|0],seed=(Math.random()*1e6)|0;picks.push({style:style,seed:seed,promise:load(i,makeSample(style,seed),true)})}await Promise.all(picks.map(function(p){return p.promise}));picks.forEach(function(p){rememberSample(p.style,p.seed)});botPreparing=false;setLocked(false)}
   async function handleFile(i,file){if(busy||botPreparing||gameMode==='survival'&&survival.active)return;if(!file||!/^image\//.test(file.type))return;if(urls[i])URL.revokeObjectURL(urls[i]);urls[i]=URL.createObjectURL(file);await load(i,urls[i],false)}
   function updateBattleHud(i){var f=F[i],p=clamp(f.hp/f.stats.hp,0,1);$('#battle-name-'+i).textContent=f.name;$('#battle-hp-'+i).textContent=Math.round(p*100)+'%';$('#battle-bar-'+i).style.width=(p*100)+'%';$('#battle-plate-'+i).textContent=f.name;$('#battle-img-'+i).src=f.src;$('#battle-img-'+i).alt=f.name}
-  function enterBattleScene(){stopBackgroundMusic();document.body.classList.add('battle-mode');startBattleMusic();$('#battle-stage').classList.toggle('team-match',!!twoByTwoBattle);$('#battle-format-label').textContent=twoByTwoBattle?'BATALHA 2X2 Â· ELIMINAÃ‡ÃƒO':'RODADA EM ANDAMENTO';[0,1].forEach(updateBattleHud);$('#battle-winner').classList.remove('show')}
+  function enterBattleScene(){stopBackgroundMusic();document.body.classList.add('battle-mode');startBattleMusic();$('#battle-stage').classList.toggle('team-match',!!twoByTwoBattle);$('#battle-format-label').textContent=twoByTwoBattle?'BATALHA 2X2 · ELIMINAÇÃO':'RODADA EM ANDAMENTO';[0,1].forEach(updateBattleHud);$('#battle-winner').classList.remove('show')}
   function leaveBattleScene(){stopBattleMusic();document.body.classList.remove('battle-mode');startBackgroundMusic();$('#battle-winner').classList.remove('show');$('#battle-stage').classList.remove('special-cinematic','team-match');$('#battle-format-label').textContent='RODADA EM ANDAMENTO'}
-  function showBattleWinner(i){$('#battle-winner-img').src=F[i].src;$('#battle-winner-name').textContent=twoByTwoBattle?(i===0?'EQUIPE AZUL VENCEU Â· ':'EQUIPE VERMELHA VENCEU Â· ')+F[i].name:F[i].name;$('#battle-winner').classList.add('show')}
+  function showBattleWinner(i){$('#battle-winner-img').src=F[i].src;$('#battle-winner-name').textContent=twoByTwoBattle?(i===0?'EQUIPE AZUL VENCEU · ':'EQUIPE VERMELHA VENCEU · ')+F[i].name:F[i].name;$('#battle-winner').classList.add('show')}
   function pop(i,text,kind){var el=document.createElement('span');el.className='pop '+(kind||'');el.textContent=text;cardEl(i).appendChild(el);setTimeout(function(){el.remove()},900)}
   function battlePause(ms){return tournamentAutoRunning?Promise.resolve():sleep(ms/(gameMode==='tournament'?tournamentSpeed:speed))}
   async function animateBattleMove(i,special,move){
@@ -611,7 +612,7 @@
     var special = A.gauge >= 100;
     if (special) A.gauge = 0;
     paintGauge(ai);
-    var basicMoves = ['Corte de Brasa','Chicote RÃ¡pido','Jato de MarÃ©','Raio Luminoso','Garra Sombria','Pulso Arcano'];
+    var basicMoves = ['Corte de Brasa','Chicote Rápido','Jato de Maré','Raio Luminoso','Garra Sombria','Pulso Arcano'];
     var move = special ? (A.specialMove || TYPES[A.type].move) : basicMoves[Object.keys(TYPES).indexOf(A.type)];
     cardEl(ai).classList.add('act');
     play(A.sounds.atk, { rate: special ? 0.8 : 1, gain: 0.8 });
@@ -620,14 +621,14 @@
     await battlePause(90);
     cardEl(ai).classList.remove('act');
     var dodgeP = clamp(0.04 + (D.stats.vel - A.stats.vel) / 400 + D.stats.vel / 600, 0.03, 0.3);
-    if (!special && Math.random() < dodgeP) {
+    if (!special && battleRandom() < dodgeP) {
       pop(di, 'ESQUIVOU', 'miss');
       log(A.name + ' tentou um ' + move + ', mas ' + D.name + ' esquivou.', 'e-miss');
       return;
     }
     var mult = typeMult(A.type, D.type);
-    var dmg = A.stats.atq * (60 / (60 + D.stats.def)) * 0.9 * (0.85 + Math.random() * 0.3) * mult;
-    var crit = Math.random() < A.stats.esp / 280;
+    var dmg = A.stats.atq * (60 / (60 + D.stats.def)) * 0.9 * (0.85 + battleRandom() * 0.3) * mult;
+    var crit = battleRandom() < A.stats.esp / 280;
     if (special) dmg *= 1.7;
     if (crit) dmg *= 1.5;
     dmg = Math.max(1, Math.round(dmg));
@@ -638,8 +639,8 @@
     pop(di, '-' + dmg, crit || special ? 'crit' : '');
     paintHp(di);
     updateBattleHud(di);
-    var extra = (mult > 1 ? ' Super eficaz!' : mult < 1 ? ' Pouco eficaz.' : '') + (crit ? ' Golpe crÃ­tico!' : '');
-    log(A.name + ' usa ' + (special ? move : 'ataque bÃ¡sico') + ' e causa ' + dmg + ' de dano.' + extra, crit || special ? 'e-crit' : '');
+    var extra = (mult > 1 ? ' Super eficaz!' : mult < 1 ? ' Pouco eficaz.' : '') + (crit ? ' Golpe crítico!' : '');
+    log(A.name + ' usa ' + (special ? move : 'ataque básico') + ' e causa ' + dmg + ' de dano.' + extra, crit || special ? 'e-crit' : '');
     if (D.hp <= 0) {
       await battlePause(260);
       play(D.sounds.ko, { gain: 0.9 });
@@ -666,6 +667,12 @@
     if(survival.enemyClass==='boss')survival.bossStartHp=F[0].hp;
     saveSurvival();paint(1);renderEvolution();botPreparing=false;setLocked(false);
   }
+
+  function waitForOnlineResult(duelId,winnerIndex){return new Promise(function(resolve){if(!activeOnlineDuel||activeOnlineDuel.id!==duelId){resolve(null);return}activeOnlineDuel.resultResolver=resolve;window.dispatchEvent(new CustomEvent('spect-online-duel-complete',{detail:{duelId:duelId,winnerIndex:winnerIndex}}));activeOnlineDuel.resultTimer=setTimeout(function(){if(activeOnlineDuel&&activeOnlineDuel.id===duelId&&activeOnlineDuel.resultResolver){activeOnlineDuel.resultResolver(null);activeOnlineDuel.resultResolver=null}},90000)})}
+  window.addEventListener('spect-online-duel-result',function(event){var detail=event.detail||{};if(activeOnlineDuel&&detail.duelId===activeOnlineDuel.id&&activeOnlineDuel.resultResolver){clearTimeout(activeOnlineDuel.resultTimer);var resolve=activeOnlineDuel.resultResolver;activeOnlineDuel.resultResolver=null;resolve(detail)}});
+  window.addEventListener('spect-online-duel-cancelled',function(event){var detail=event.detail||{};if(activeOnlineDuel&&detail.duelId===activeOnlineDuel.id&&activeOnlineDuel.resultResolver){clearTimeout(activeOnlineDuel.resultTimer);var resolve=activeOnlineDuel.resultResolver;activeOnlineDuel.resultResolver=null;resolve(null)}});
+  function closeOnlineDuel(){var context=activeOnlineDuel;if(!context)return;clearTimeout(context.resultTimer);onlineBattleRng=null;F=context.previousF;gameMode=context.previousMode;twoByTwoEnabled=context.previousTwoByTwo;twoByTwoBattle=context.previousTwoByTwoBattle;activeOnlineDuel=null;resetBattleView(false);F.forEach(function(f,index){if(f)paint(index)});setLocked(false);updateModeControls();window.dispatchEvent(new CustomEvent('spect-world-duel-visibility',{detail:{visible:true}}))}
+  window.SPECT_START_ONLINE_BATTLE=async function(duel){if(!duel||busy||activeOnlineDuel||!Array.isArray(duel.fighters)||duel.fighters.length!==2)return false;activeOnlineDuel={id:duel.duelId,previousF:F.slice(),previousMode:gameMode,previousTwoByTwo:twoByTwoEnabled,previousTwoByTwoBattle:twoByTwoBattle};gameMode='online';twoByTwoEnabled=false;twoByTwoBattle=null;window.dispatchEvent(new CustomEvent('spect-world-duel-visibility',{detail:{visible:false}}));try{await Promise.all(duel.fighters.map(function(fighter,index){return load(index,fighter.image,true)}));for(var i=0;i<2;i++){var official=duel.fighters[i];if(!F[i])throw Error('Lutador online não carregou.');F[i].name=official.name;F[i].stats=Object.assign({},official.stats);F[i].hp=official.stats.hp;F[i].gauge=0;F[i].battleDamage=0;F[i].specialMove=TYPES[F[i].type].move;paint(i)}onlineBattleRng=mulberry(duel.seed>>>0);fight();return true}catch(error){console.error('Não foi possível iniciar a batalha online:',error);window.dispatchEvent(new CustomEvent('spect-online-duel-complete',{detail:{duelId:duel.duelId,failed:true}}));closeOnlineDuel();return false}};
   async function restoreSurvival(image){
     try{var style=sessionStorage.getItem('arenaPixelsSurvivalStyle')||'spiky',seed=Number(sessionStorage.getItem('arenaPixelsSurvivalSeed'))||11;
       botPreparing=true;await load(0,image,false);if(!F[0])throw Error('fighter');survivalImageLocked=true;survival.imageKey=evolutionKey(image);survival.active=true;
@@ -688,7 +695,7 @@
     $('#fightBtn').disabled = true;
     if(!autoTournamentFight)enterBattleScene();
     if (gameMode === 'survival' && survival.enemyClass !== 'normal') {
-      var intro = survival.enemyClass === 'boss' ? 'CHEFÃƒO Â· ARENA ' + survival.arena : 'MINI CHEFE Â· ARENA ' + survival.arena;
+      var intro = survival.enemyClass === 'boss' ? 'CHEFÃO · ARENA ' + survival.arena : 'MINI CHEFE · ARENA ' + survival.arena;
       $('#battle-special').textContent = intro; $('#battle-special').classList.add('show'); $('#battle-stage').classList.add('special-cinematic');
       play(F[1].sounds.atk, { rate: 0.55, gain: 1 });
       await sleep(1300 / speed); $('#battle-special').classList.remove('show'); $('#battle-stage').classList.remove('special-cinematic');
@@ -696,7 +703,7 @@
     var round = 1;
     while ((useTwoByTwo?twoByTwoBattle.active[0]<2&&twoByTwoBattle.active[1]<2:F[0].hp > 0 && F[1].hp > 0) && round <= (useTwoByTwo?80:40)) {
       $('#battle-round').textContent = 'RODADA ' + round;
-      var j0 = F[0].stats.vel * (0.8 + Math.random() * 0.4), j1 = F[1].stats.vel * (0.8 + Math.random() * 0.4);
+      var j0 = F[0].stats.vel * (0.8 + battleRandom() * 0.4), j1 = F[1].stats.vel * (0.8 + battleRandom() * 0.4);
       var order = j0 >= j1 ? [0, 1] : [1, 0];
       for (var k = 0; k < 2; k++) {
         if (id !== runId) return;
@@ -717,8 +724,9 @@
     if(useTwoByTwo){if(twoByTwoBattle.active[0]>=2)w=1;else if(twoByTwoBattle.active[1]>=2)w=0;else w=F[0].hp/F[0].stats.hp>=F[1].hp/F[1].stats.hp?0:1}
     else{w=F[0].hp / F[0].stats.hp >= F[1].hp / F[1].stats.hp ? 0 : 1;if (F[w].hp <= 0) w = 1 - w}
     var l = 1 - w;
+    if(gameMode==='online'&&activeOnlineDuel){var officialResult=await waitForOnlineResult(activeOnlineDuel.id,w);if(!officialResult||officialResult.winnerIndex===undefined){$('#battle-winner-name').textContent='BATALHA CANCELADA';$('#battle-winner').classList.add('show');await sleep(1300);leaveBattleScene();resetBattleView(false);setLocked(false);closeOnlineDuel();return}w=officialResult.winnerIndex;l=1-w}
     var tournamentToken=gameMode==='tournament'&&tournament?tournament.id+':'+tournament.currentMatchId:null;
-    saveRanking(w,tournamentToken);
+    saveRanking(w,gameMode==='online'&&activeOnlineDuel?'online:'+activeOnlineDuel.id:tournamentToken);
     if (gameMode === 'survival') recordSurvivalFight(w);
     if (gameMode === 'tournament' && tournament) settleTournamentResult(tourneyMatch(tournament.currentMatchId),F[w].careerId);
     if(autoTournamentFight){resetBattleView(false);setLocked(false);updateModeControls();startBackgroundMusic();return}
@@ -735,6 +743,7 @@
     setLocked(false);
     updateModeControls();
     if(gameMode==='tournament')renderTournament();
+    if(gameMode==='online')closeOnlineDuel();
   }
 
   async function advanceTwoByTwoFighter(side){
@@ -807,7 +816,7 @@
     if(backgroundMusic)backgroundMusic.muted=musicMuted;
     if(battleMusic)battleMusic.muted=musicMuted;
     if(!musicMuted){if(document.body.classList.contains('battle-mode')||tournamentAutoBatch)startBattleMusic();else startBackgroundMusic()}
-    this.textContent = musicMuted ? 'MÃºsica desligada' : 'MÃºsica ligada';
+    this.textContent = musicMuted ? 'Música desligada' : 'Música ligada';
     this.setAttribute('aria-pressed', musicMuted ? 'true' : 'false');
   });
 
@@ -822,34 +831,34 @@
   var socialLast = ['Gamer','BR','Master','X','Plays','_07','Pro','zin','Fox','Storm','Bits','.exe','Knight','Zero'];
   var socialMessages = [
     'Acabei de testar um novo lutador. Essa arena ficou muito boa! ðŸŽ®',
-    'Qual elemento vocÃªs acham mais forte: Fogo, Ãgua, Planta ou Sombra?',
-    'Meu lutador favorito atÃ© agora Ã© o que tem mais velocidade. âš¡',
-    'AlguÃ©m conseguiu passar de 500 de dano em uma luta?',
-    'As combinaÃ§Ãµes de imagens deixam cada batalha diferente. âœ¨',
+    'Qual elemento vocês acham mais forte: Fogo, Água, Planta ou Sombra?',
+    'Meu lutador favorito até agora é o que tem mais velocidade. ⚡',
+    'Alguém conseguiu passar de 500 de dano em uma luta?',
+    'As combinações de imagens deixam cada batalha diferente. ✨',
     'Desafio da comunidade: criem dois lutadores e vejam quem vence!',
-    'A arena estÃ¡ aberta! Quem vai testar um duelo agora?',
+    'A arena está aberta! Quem vai testar um duelo agora?',
     'Esse visual ficou com muita cara de chefe final ðŸ‘€',
-    'Hoje eu estou torcendo pelo lutador mais improvÃ¡vel.',
+    'Hoje eu estou torcendo pelo lutador mais improvável.',
     'Uma revanche desse duelo seria boa demais.',
-    'Qual som de golpe ficou mais legal atÃ© agora?',
-    'Dica: nÃ£o subestimem a defesa alta ðŸ›¡ï¸',
-    'Esse especial virou o combate no Ãºltimo segundo!',
+    'Qual som de golpe ficou mais legal até agora?',
+    'Dica: não subestimem a defesa alta ðŸ›¡ï¸',
+    'Esse especial virou o combate no último segundo!',
     'Quero ver uma luta entre dois lutadores de Sombra ðŸŒ‘',
     'O visual da arena combina muito com esse lutador.',
-    'Batalha equilibrada Ã© sempre a melhor de assistir!',
-    'AlguÃ©m mais escolhe o lutador pela aparÃªncia primeiro?',
-    'Nova rodada, novas combinaÃ§Ãµes. Bora pra arena!'
+    'Batalha equilibrada é sempre a melhor de assistir!',
+    'Alguém mais escolhe o lutador pela aparência primeiro?',
+    'Nova rodada, novas combinações. Bora pra arena!'
   ];
   var avatarColors = ['#6652a3','#286b80','#8a4d59','#4c765e','#8b672f','#425b91'];
   function socialRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
   function socialName() {
-    // Ã€s vezes usa o nome gerado a partir de uma das imagens como nome de perfil.
+    // Às vezes usa o nome gerado a partir de uma das imagens como nome de perfil.
     var imageNames = F.filter(Boolean).map(function (fighter) { return fighter.name; });
     var base = imageNames.length && Math.random() < 0.38 ? socialRandom(imageNames) : socialRandom(socialFirst) + socialRandom(socialLast);
     return base;
   }
   function publishBattleChat(winnerIndex, loserIndex) {
-    // Publica comentÃ¡rios novos a cada batalha, usando os resultados reais da luta.
+    // Publica comentários novos a cada batalha, usando os resultados reais da luta.
     var winner = F[winnerIndex], loser = F[loserIndex];
     if (!winner || !loser) return;
 
@@ -861,15 +870,15 @@
       winner.name + ' levou essa! Foram ' + winnerDamage + ' de dano causado. ðŸ”¥',
       loser.name + ' ainda conseguiu causar ' + loserDamage + ' de dano. Boa luta! ðŸ‘€',
       margin < 0.15 ? 'Foi por muito pouco! Essa luta merecia mais um round ðŸ˜±' : winner.name + ' fechou o combate com estilo!',
-      winnerDamage > loserDamage * 1.5 ? winner.name + ' dominou o combate do comeÃ§o ao fim âš¡' : 'Os dois trocaram golpes pesados. Foram ' + totalDamage + ' de dano no total!',
+      winnerDamage > loserDamage * 1.5 ? winner.name + ' dominou o combate do começo ao fim ⚡' : 'Os dois trocaram golpes pesados. Foram ' + totalDamage + ' de dano no total!',
       'Esse especial de ' + winner.name + ' mudou tudo!',
       'Quero ver ' + loser.name + ' voltando para uma revanche.',
-      'A defesa de ' + loser.name + ' segurou bem por vÃ¡rios rounds ðŸ›¡ï¸',
-      'CombinaÃ§Ã£o de cores do ' + winner.name + ' ficou incrÃ­vel âœ¨',
-      'Quem vocÃªs acham que vence numa revanche?',
+      'A defesa de ' + loser.name + ' segurou bem por vários rounds ðŸ›¡ï¸',
+      'Combinação de cores do ' + winner.name + ' ficou incrível ✨',
+      'Quem vocês acham que vence numa revanche?',
       'Esse duelo foi melhor do que eu esperava!',
-      'A arena estÃ¡ pegando fogo depois dessa luta ðŸ”¥',
-      'Mais alguÃ©m viu aquele crÃ­tico? Que impacto!'
+      'A arena está pegando fogo depois dessa luta ðŸ”¥',
+      'Mais alguém viu aquele crítico? Que impacto!'
     ];
 
     var resultPost = {
@@ -904,14 +913,14 @@
     var fighter = socialRandom(F);
     var other = F[fighter === F[0] ? 1 : 0];
     var ambientLines = [
-      'AlguÃ©m jÃ¡ escolheu seu favorito entre ' + F[0].name + ' e ' + F[1].name + '?',
+      'Alguém já escolheu seu favorito entre ' + F[0].name + ' e ' + F[1].name + '?',
       fighter.name + ' tem um visual muito marcante.',
-      'Quero ver ' + fighter.name + ' usando o especial na prÃ³xima luta!',
-      'SerÃ¡ que ' + other.name + ' consegue uma revanche?',
-      'A combinaÃ§Ã£o de tipos desse duelo estÃ¡ interessante ðŸ‘€',
-      'Seus lutadores estÃ£o prontos para mais uma rodada?',
-      'A arena continua aberta. Qual vai ser o prÃ³ximo duelo?',
-      'Acho que essa luta vai ser equilibrada âš¡',
+      'Quero ver ' + fighter.name + ' usando o especial na próxima luta!',
+      'Será que ' + other.name + ' consegue uma revanche?',
+      'A combinação de tipos desse duelo está interessante ðŸ‘€',
+      'Seus lutadores estão prontos para mais uma rodada?',
+      'A arena continua aberta. Qual vai ser o próximo duelo?',
+      'Acho que essa luta vai ser equilibrada ⚡',
       'Qual dos dois tem o melhor visual: ' + F[0].name + ' ou ' + F[1].name + '?',
       'Estou curioso para ver como o especial de ' + fighter.name + ' funciona.'
     ];
@@ -932,18 +941,18 @@
     try { sessionStorage.setItem('arenaPixelsSocialFeed', JSON.stringify(socialPosts.slice(0, 8))); } catch (e) {}
   }
   function renderSocialFeed() {
-    if (!socialPosts.length) { socialFeed.innerHTML = '<div class="community-empty">Ainda nÃ£o hÃ¡ publicaÃ§Ãµes. Seja o primeiro a falar!</div>'; return; }
+    if (!socialPosts.length) { socialFeed.innerHTML = '<div class="community-empty">Ainda não há publicações. Seja o primeiro a falar!</div>'; return; }
     socialFeed.innerHTML = socialPosts.slice().sort(function (a,b) { return b.time-a.time; }).slice(0, 8).map(function (post) {
       var initials = String(post.name).slice(0,2).toUpperCase();
       var color = avatarColors[Math.abs(String(post.name).split('').reduce(function (n,c) { return n+c.charCodeAt(0); },0)) % avatarColors.length];
-      return '<article class="social-post"><div class="social-avatar" style="--avatar:'+color+'">'+escapeRank(initials)+'</div><div><div class="social-meta"><span class="social-name">'+escapeRank(post.name)+'</span><span class="social-time">'+gameDate(post.time).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})+'</span></div><p class="social-message">'+escapeRank(post.message)+'</p><div class="social-actions"><button type="button" class="post-like '+(post.liked?'liked':'')+'" data-like="'+escapeRank(post.id)+'">â™¥ '+(post.likes||0)+'</button><span class="social-count">PUBLICAÃ‡ÃƒO DA COMUNIDADE</span></div></div></article>';
+      return '<article class="social-post"><div class="social-avatar" style="--avatar:'+color+'">'+escapeRank(initials)+'</div><div><div class="social-meta"><span class="social-name">'+escapeRank(post.name)+'</span><span class="social-time">'+gameDate(post.time).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})+'</span></div><p class="social-message">'+escapeRank(post.message)+'</p><div class="social-actions"><button type="button" class="post-like '+(post.liked?'liked':'')+'" data-like="'+escapeRank(post.id)+'">♥ '+(post.likes||0)+'</button><span class="social-count">PUBLICAÇÃO DA COMUNIDADE</span></div></div></article>';
     }).join('');
   }
   $('#social-form').addEventListener('submit', function (event) {
     event.preventDefault();
     var input = $('#social-input'), message = input.value.trim();
     if (!message) return;
-    socialPosts.push({ id: 'post-' + Date.now() + '-' + Math.random().toString(36).slice(2,7), name: 'VocÃª', message: message, likes: 0, liked: false, time: Date.now() });
+    socialPosts.push({ id: 'post-' + Date.now() + '-' + Math.random().toString(36).slice(2,7), name: 'Você', message: message, likes: 0, liked: false, time: Date.now() });
     socialPosts.sort(function (a, b) { return b.time - a.time; });
     socialPosts = socialPosts.slice(0, 8);
     input.value = ''; saveSocialFeed(); renderSocialFeed();
@@ -1130,16 +1139,16 @@
   function part(mesh,pos,size,color,textured,angle){var c=Math.cos(angle),s=Math.sin(angle),x=c*pos[0]+s*pos[2],z=-s*pos[0]+c*pos[2],model=mul(mul(translate(x,pos[1],z),rotateY(angle)),scale(size[0],size[1],size[2])),view=lookAt([0,2.65,7.2],[0,1.48,0],[0,1,0]),proj=perspective(Math.PI/4,canvas.width/canvas.height,.1,40),mvp=mul(mul(proj,view),model);gl.bindBuffer(gl.ARRAY_BUFFER,mesh.buffer);gl.enableVertexAttribArray(attributes.position);gl.vertexAttribPointer(attributes.position,3,gl.FLOAT,false,32,0);gl.enableVertexAttribArray(attributes.normal);gl.vertexAttribPointer(attributes.normal,3,gl.FLOAT,false,32,12);gl.enableVertexAttribArray(attributes.uv);gl.vertexAttribPointer(attributes.uv,2,gl.FLOAT,false,32,24);gl.uniformMatrix4fv(uniforms.model,false,model);gl.uniformMatrix4fv(uniforms.mvp,false,mvp);gl.uniform4fv(uniforms.color,color);gl.uniform1i(uniforms.useTexture,textured?1:0);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,texture);gl.uniform1i(uniforms.texture,0);gl.drawArrays(gl.TRIANGLES,0,mesh.count)}
   function render(time){if(!gl)return;resize();if(!canvas.width||!canvas.height)return;gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(program);var t=time*.001,turn=Math.sin(t*.36)*.36+t*.12,bob=Math.sin(t*2.1)*.035;part(meshes.cap,[0,-.12,0],[2.65,.16,2.65],[.12,.26,.42,1],false,turn);part(meshes.cap,[0,-.025,0],[2.32,.035,2.32],[.22,.76,.91,1],false,turn);part(meshes.cube,[0,1.86+bob,0],[1.72,1.72,1.72],[1,1,1,1],true,turn);var legColor=look.boots==='boot'?[.42,.28,.2,1]:look.boots==='sneaker'?[.14,.34,.34,1]:[.19,.23,.39,1],bootColor=look.boots==='boot'?[.68,.4,.22,1]:look.boots==='sneaker'?[.2,.72,.62,1]:[.54,.63,.86,1];[-.44,.44].forEach(function(x){part(meshes.cube,[x,.53+bob,0],[.36,.96,.42],legColor,false,turn);part(meshes.cube,[x,.17+bob,.16],[.5,.28,.72],bootColor,false,turn);if(look.boots==='armor'){part(meshes.cube,[x,.53+bob,.228],[.27,.55,.055],[.32,.8,.98,1],false,turn);part(meshes.cube,[x,.82+bob,.23],[.34,.1,.06],[.77,.79,.98,1],false,turn)}else if(look.boots==='sneaker'){part(meshes.cube,[x,.12+bob,.51],[.36,.045,.035],[.83,.98,.94,1],false,turn)}else{part(meshes.cube,[x,.35+bob,.23],[.4,.13,.05],[.84,.61,.38,1],false,turn)}});if(look.hat==='cap'){part(meshes.cube,[0,2.75+bob,.1],[1.28,.12,.98],[.12,.76,.91,1],false,turn);part(meshes.sphere,[0,2.84+bob,0],[.92,.44,.84],[.3,.19,.65,1],false,turn)}else if(look.hat==='helmet'){part(meshes.sphere,[0,2.82+bob,0],[1.04,.46,.96],[.57,.66,.86,1],false,turn);part(meshes.cube,[0,2.72+bob,.45],[1.02,.15,.15],[.17,.84,.97,1],false,turn);part(meshes.cube,[0,2.91+bob,.48],[.25,.15,.06],[.78,.94,1,1],false,turn)}else if(look.hat==='crown'){part(meshes.crown,[0,2.83+bob,0],[1.05,.34,.95],[.98,.68,.18,1],false,turn);[[-.36,0],[0,0],[.36,0],[-.18,.28],[.18,.28]].forEach(function(p){part(meshes.cone,[p[0],3.06+bob,p[1]],[.24,.35,.24],[1,.78,.25,1],false,turn)});part(meshes.cap,[0,2.77+bob,0],[1,.09,.9],[.94,.36,.12,1],false,turn)}}
   function start(){if(screen.hidden||running||!gl)return;running=true;function frame(t){if(screen.hidden){running=false;return}render(t);requestAnimationFrame(frame)}requestAnimationFrame(frame)}
-  function uploadImage(file){if(!file||!gl)return;if(imageUrl)URL.revokeObjectURL(imageUrl);imageUrl=URL.createObjectURL(file);var image=new Image();image.onload=function(){makeTexture(image)};image.onerror=function(){fallback.hidden=false;fallback.textContent='NÃ£o foi possÃ­vel abrir esta imagem.'};image.src=imageUrl}
-  if(canvas&&fallback&&setupGL()){window.addEventListener('resize',resize);canvas.addEventListener('webglcontextlost',function(event){event.preventDefault();running=false;fallback.hidden=false;fallback.textContent='A visualizaÃ§Ã£o 3D foi interrompida pelo navegador.'})}
+  function uploadImage(file){if(!file||!gl)return;if(imageUrl)URL.revokeObjectURL(imageUrl);imageUrl=URL.createObjectURL(file);var image=new Image();image.onload=function(){makeTexture(image)};image.onerror=function(){fallback.hidden=false;fallback.textContent='Não foi possível abrir esta imagem.'};image.src=imageUrl}
+  if(canvas&&fallback&&setupGL()){window.addEventListener('resize',resize);canvas.addEventListener('webglcontextlost',function(event){event.preventDefault();running=false;fallback.hidden=false;fallback.textContent='A visualização 3D foi interrompida pelo navegador.'})}
   document.querySelectorAll('[data-world-choice]').forEach(function(group){group.addEventListener('click',function(event){var button=event.target.closest('button[data-value]');if(!button)return;group.querySelectorAll('button').forEach(function(item){item.classList.toggle('selected',item===button);item.setAttribute('aria-pressed',item===button?'true':'false')});look[group.getAttribute('data-world-choice')]=button.getAttribute('data-value')})});
   document.querySelectorAll('[data-world-choice="hat"] button').forEach(function(button){button.classList.toggle('selected',button.getAttribute('data-value')==='helmet');button.setAttribute('aria-pressed',button.getAttribute('data-value')==='helmet'?'true':'false')});
   document.querySelectorAll('[data-world-choice="boots"] button').forEach(function(button){button.classList.toggle('selected',button.getAttribute('data-value')==='armor');button.setAttribute('aria-pressed',button.getAttribute('data-value')==='armor'?'true':'false')});
   nameInput.addEventListener('input',function(){var value=nameInput.value.trim();nameLabel.textContent=(value||'LUTADOR DO MUNDO').toLocaleUpperCase('pt-BR')});
   imageInput.addEventListener('change',function(){uploadImage(imageInput.files&&imageInput.files[0])});
   function speechWav(samples,sampleRate){var buffer=new ArrayBuffer(44+samples.length*2),view=new DataView(buffer);function writeText(offset,text){for(var i=0;i<text.length;i++)view.setUint8(offset+i,text.charCodeAt(i))}writeText(0,'RIFF');view.setUint32(4,36+samples.length*2,true);writeText(8,'WAVE');writeText(12,'fmt ');view.setUint32(16,16,true);view.setUint16(20,1,true);view.setUint16(22,1,true);view.setUint32(24,sampleRate,true);view.setUint32(28,sampleRate*2,true);view.setUint16(32,2,true);view.setUint16(34,16,true);writeText(36,'data');view.setUint32(40,samples.length*2,true);for(var i=0;i<samples.length;i++)view.setInt16(44+i*2,Math.max(-1,Math.min(1,samples[i]))*32767,true);return new Blob([buffer],{type:'audio/wav'})}
-  soundInput.addEventListener('click',function(){voiceSeed=Math.floor(Math.random()*0x7fffffff);window.SPECT_PLAYER_VOICE_SEED=voiceSeed;soundInput.disabled=true;soundInput.textContent='GERANDO VOZ...';play.disabled=true;var file=imageInput.files&&imageInput.files[0],generated=file&&window.SPECT_CREATE_IMAGE_SPEECH?window.SPECT_CREATE_IMAGE_SPEECH(file,1,voiceSeed):Promise.resolve(window.SPECT_CREATE_SPEECH(voiceSeed,1));generated.then(function(voice){if(soundUrl)URL.revokeObjectURL(soundUrl);soundUrl=URL.createObjectURL(speechWav(voice.samples,voice.sampleRate));audio.src=soundUrl;play.disabled=false;play.textContent='â–¶ Ouvir voz';soundInput.textContent='GERAR OUTRA VOZ'}).catch(function(error){console.warn('NÃ£o foi possÃ­vel gerar a voz:',error);soundInput.textContent='TENTAR DE NOVO'}).finally(function(){soundInput.disabled=false})});
-  play.addEventListener('click',function(){if(!audio.src)return;if(audio.paused){audio.play().then(function(){play.textContent='â…¡ Parar som'}).catch(function(){play.textContent='NÃ£o foi possÃ­vel reproduzir'})}else{audio.pause();audio.currentTime=0;play.textContent='â–¶ Ouvir som'}});audio.addEventListener('ended',function(){play.textContent='â–¶ Ouvir som'});
+  soundInput.addEventListener('click',function(){voiceSeed=Math.floor(Math.random()*0x7fffffff);window.SPECT_PLAYER_VOICE_SEED=voiceSeed;soundInput.disabled=true;soundInput.textContent='GERANDO VOZ...';play.disabled=true;var file=imageInput.files&&imageInput.files[0],generated=file&&window.SPECT_CREATE_IMAGE_SPEECH?window.SPECT_CREATE_IMAGE_SPEECH(file,1,voiceSeed):Promise.resolve(window.SPECT_CREATE_SPEECH(voiceSeed,1));generated.then(function(voice){if(soundUrl)URL.revokeObjectURL(soundUrl);soundUrl=URL.createObjectURL(speechWav(voice.samples,voice.sampleRate));audio.src=soundUrl;play.disabled=false;play.textContent='▶ Ouvir voz';soundInput.textContent='GERAR OUTRA VOZ'}).catch(function(error){console.warn('Não foi possível gerar a voz:',error);soundInput.textContent='TENTAR DE NOVO'}).finally(function(){soundInput.disabled=false})});
+  play.addEventListener('click',function(){if(!audio.src)return;if(audio.paused){audio.play().then(function(){play.textContent='Ⅱ Parar som'}).catch(function(){play.textContent='Não foi possível reproduzir'})}else{audio.pause();audio.currentTime=0;play.textContent='▶ Ouvir som'}});audio.addEventListener('ended',function(){play.textContent='▶ Ouvir som'});
   document.getElementById('world-volume-input').addEventListener('input',function(){audio.volume=Number(this.value)/100});audio.volume=.5;
   function closeWorld(){screen.hidden=true;screen.setAttribute('aria-hidden','true');document.body.classList.remove('world-open');audio.pause();audio.currentTime=0;if(soundUrl){URL.revokeObjectURL(soundUrl);soundUrl=''}audio.removeAttribute('src');audio.load();play.disabled=true;play.textContent='Ouvir som';soundInput.textContent='GERAR OUTRA VOZ';startBackgroundMusic()}
   document.getElementById('world-back').addEventListener('click',closeWorld);document.addEventListener('keydown',function(event){if(event.key==='Escape'&&!screen.hidden)closeWorld()});
